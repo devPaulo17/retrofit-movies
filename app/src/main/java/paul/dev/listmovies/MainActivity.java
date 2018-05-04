@@ -1,0 +1,137 @@
+package paul.dev.listmovies;
+
+
+
+
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+
+
+import android.support.v7.widget.Toolbar;
+
+
+import android.transition.Explode;
+
+
+
+import java.util.ArrayList;
+
+import java.util.List;
+
+
+import paul.dev.listmovies.DataDB.MoviesDbHelper;
+import paul.dev.listmovies.Fragments.ListMoviesFragment;
+import paul.dev.listmovies.Fragments.TopRatedFragment;
+import paul.dev.listmovies.Fragments.UpcomingFragment;
+
+
+
+public class MainActivity extends AppCompatActivity{
+
+
+    public static final String EXTRA_MOVIE_ID = "extra_movie_id";
+
+    private Toolbar toolbar;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private MoviesDbHelper mMoviesDbHelper;
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        setUpWindowAnimations();
+
+
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
+
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
+
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void setUpWindowAnimations(){
+        getWindow().setReenterTransition(new Explode());
+        getWindow().setExitTransition(new Explode().setDuration(500));
+
+
+    }
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new ListMoviesFragment(), "Popular");
+        adapter.addFragment(new TopRatedFragment(), "Más valoradas");
+        adapter.addFragment(new UpcomingFragment(), "Próximas");
+        viewPager.setAdapter(adapter);
+    }
+
+
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
+    }
+
+
+
+    @Override
+    protected void onDestroy() {
+
+
+        mMoviesDbHelper.close();
+        super.onDestroy();
+    }
+
+
+
+
+}
