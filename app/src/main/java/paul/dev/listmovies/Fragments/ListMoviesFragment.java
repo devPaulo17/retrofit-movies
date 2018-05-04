@@ -113,8 +113,6 @@ public class ListMoviesFragment extends Fragment  {
 
         alert.showAlert("Cargando Películas","Por favor espere...");
 
-        getActivity().deleteDatabase(MoviesDbHelper.DATABASE_NAME);
-
 
 
 
@@ -151,7 +149,7 @@ public class ListMoviesFragment extends Fragment  {
                             jsonResponse.getAndroid()[i].getPoster_path(),
                             jsonResponse.getAndroid()[i].getRelease_date(),
                             jsonResponse.getAndroid()[i].getHomepage(),
-                            2));
+                            1));
 
                 }
 
@@ -210,8 +208,7 @@ public class ListMoviesFragment extends Fragment  {
 
             } else {
 
-                Toast.makeText(getActivity(), "No hay datos", Toast.LENGTH_SHORT).show();
-                // Mostrar empty state
+                alert.close();
             }
         }
     }

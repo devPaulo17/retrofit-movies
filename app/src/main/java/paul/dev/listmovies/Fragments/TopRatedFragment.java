@@ -105,8 +105,6 @@ public class TopRatedFragment extends Fragment {
 
         alert.showAlert("Cargando Películas","Por favor espere...");
 
-        getActivity().deleteDatabase(MoviesDbHelper.DATABASE_NAME);
-
 
 
 
@@ -205,8 +203,7 @@ public class TopRatedFragment extends Fragment {
                 alert.close();
             } else {
 
-                Toast.makeText(getActivity(), "No hay datos", Toast.LENGTH_SHORT).show();
-                // Mostrar empty state
+                alert.close();
             }
         }
     }
